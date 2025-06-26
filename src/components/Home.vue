@@ -141,7 +141,7 @@ function $() {
   </div>
 
   <div id="clan-war-ratings">
-    <h2>Clan Battles S29: Sea Lion results</h2>
+    <h2>Clan Battles S{{ API_DATA().DATA!.season_number }} results</h2>
     <div class="clans">
       <Clan v-for="(clan, index) in API_DATA().DATA!.clan_wars"
             :i="index"

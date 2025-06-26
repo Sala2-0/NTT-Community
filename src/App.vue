@@ -25,6 +25,7 @@ const getClanData = async () => {
 
   data.DATA.community_clans = parsed.community_clans;
   data.DATA.clan_wars = parsed.clan_wars;
+  data.DATA.season_number = parsed.season_number;
 };
 
 const getShipData = async () => {

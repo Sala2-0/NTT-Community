@@ -39,6 +39,7 @@ type Clan = {
 type Data = {
     clan_wars: Clan | null;
     community_clans: Members | null;
+    season_number: number | null;
 };
 
 type Ships = {
@@ -56,6 +57,7 @@ export const API_DATA = defineStore("data", () => {
     const DATA = ref<Data>({
         community_clans: null,
         clan_wars: null,
+        season_number: null
     });
 
     const SHIPS = ref<Ships>({
