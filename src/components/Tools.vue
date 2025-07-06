@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import PrCalculator from "./tools/PrCalculator.vue";
+import BattleMonitor from "./tools/BattleMonitor.vue";
 
 defineProps<{
   toggle: (e: MouseEvent) => void,
@@ -13,6 +14,10 @@ const SWITCH = (event: MouseEvent) => {
   const self = event.target as HTMLButtonElement;
 
   if (self.classList.contains("selected")) return;
+
+  for (const el of document.getElementsByClassName("selected"))
+    el.classList.remove("selected");
+
   self.classList.add("selected");
 
   showPage.value = false;
@@ -28,15 +33,17 @@ const SWITCH = (event: MouseEvent) => {
       <div id="sidebar">
         <button id="return" @click="toggle">Return</button>
         <button tool="pr_calculator" @click="SWITCH">PR Calculator</button>
+        <button tool="battle_monitor" @click="SWITCH">Battle Monitor</button>
       </div>
 
       <div id="intro" v-if="tool === null">
         <h2>Welcome to Tools section</h2>
-        <p>Here, you will find various tools focused towards WoWs that I have created</p>
+        <p>Here, you will find various tools and games oriented towards WoWs that I have created</p>
       </div>
 
       <div id="pages" v-show="showPage">
         <PrCalculator v-show="tool === 'pr_calculator'"/>
+        <BattleMonitor v-show="tool === 'battle_monitor'"/>
       </div>
     </div>
   </div>
@@ -82,9 +89,9 @@ const SWITCH = (event: MouseEvent) => {
   #pages, #intro {
     position: absolute;
     top: 0;
+    bottom: 0;
     left: 250px;
-    width: calc(100% - 250px);
-    height: 100%;
+    right: 0;
     padding: 2rem;
     overflow-y: auto;
 

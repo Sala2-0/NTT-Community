@@ -171,7 +171,7 @@ p { font-size: 1.1em; font-weight: 500; margin: 0 }
 }
 
 #version {
-  right: 80px;
+  right: 10px;
   top: 10px;
   font-size: 1em;
 }
@@ -211,7 +211,7 @@ p { font-size: 1.1em; font-weight: 500; margin: 0 }
   margin-top: 5rem;
   justify-content: center;
   background-color: transparent;
-  height: 500px;
+  height: 400px;
 
   #search {
     padding: 0.5rem;
@@ -240,7 +240,7 @@ p { font-size: 1.1em; font-weight: 500; margin: 0 }
   top: 70px;
   left: 400px;
   bottom: 100px;
-  right: 100px;
+  right: 50px;
   overflow-y: auto;
   overflow-x: auto;
   background-color: #3b3b3b;
