@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import {ref, onMounted, onUnmounted, watch} from 'vue';
 import Members from "./Members.vue";
-import Clan from "./Clan.vue";
 import Tools from "./Tools.vue";
-import {API_DATA} from "../data.ts";
+import PopularShips from "./PopularShips.vue";
 
 const page = ref<string | null>(null);
 const about = ref(false);
@@ -65,13 +64,14 @@ function $() {
 <template>
   <transition name="fade">
     <div v-show="hide" id="navbar">
-      <button page="members" class="members" @click="toggle" v-if="windowWidth > 500">Members</button>
-      <button class="about" @click="about = !about" v-if="windowWidth > 500">About</button>
-      <button page="tools" class="tools" @click="toggle" v-if="windowWidth > 500">Tools</button>
+      <button @click="about = !about" v-if="windowWidth > 500">About</button>
+      <button page="members" @click="toggle" v-if="windowWidth > 500">Members</button>
+      <button page="popular_ships" @click="toggle" v-if="windowWidth > 500">Popular Ships</button>
+      <button page="tools" @click="toggle" v-if="windowWidth > 500">Tools</button>
       <button class="discord" @click="discord" v-if="windowWidth > 500">Join our Discord!</button>
 
       <button class="mobile-menu" v-if="windowWidth <= 500" @click="toggleMobileSidebar">
-        <img src="../assets/menu.png" alt="">
+        <img src="../../assets/menu.png" alt="">
       </button>
     </div>
   </transition>
@@ -79,13 +79,16 @@ function $() {
   <transition name="fade">
     <div v-show="!hide" id="title">
       <p>NTT Community</p>
-      <button page="members" class="members" @click="toggle" v-if="windowWidth > 500">Members</button>
-      <button class="about" @click="about = !about" v-if="windowWidth > 500">About</button>
-      <button page="tools" class="tools" @click="toggle" v-if="windowWidth > 500">Tools</button>
-      <button class="discord" @click="discord" v-if="windowWidth > 500">Join our Discord!</button>
+      <div id="navbar-buttons-top">
+        <button @click="about = !about" v-if="windowWidth > 500">About</button>
+        <button page="members" @click="toggle" v-if="windowWidth > 500">Members</button>
+        <button page="popular_ships" @click="toggle" v-if="windowWidth > 500">Popular Ships</button>
+        <button page="tools" @click="toggle" v-if="windowWidth > 500">Tools</button>
+        <button class="discord" @click="discord" v-if="windowWidth > 500">Join our Discord!</button>
+      </div>
 
       <button class="mobile-menu" v-if="windowWidth <= 500" @click="toggleMobileSidebar">
-        <img src="../assets/menu.png" alt="">
+        <img src="../../assets/menu.png" alt="">
       </button>
     </div>
   </transition>
@@ -97,14 +100,14 @@ function $() {
       <p>Site is managed by <a href="https://profile.worldofwarships.eu/statistics/557422466" target="_blank">Yurizono_Seia_</a></p>
       <p>Built with Vue.js</p>
     </div>
-    <p class="version">Site version 2.2</p>
+    <p class="version">Site version 2.3</p>
   </div>
 
   <div id="about-dropdown" v-show="about" v-if="windowWidth > 500">
     <p>Site is managed by <a href="https://profile.worldofwarships.eu/statistics/557422466" target="_blank">Yurizono_Seia_</a></p>
     <p>Built with Vue.js</p>
     <button class="donation" @click="$">OPTIONAL</button>
-    <p class="version">Site version 2.2</p>
+    <p class="version">Site version 2.3</p>
   </div>
 
   <div id="intro">
@@ -140,18 +143,9 @@ function $() {
     </div>
   </div>
 
-  <div id="clan-war-ratings">
-    <h2>Clan Battles S{{ API_DATA().DATA!.season_number }} results</h2>
-    <div class="clans">
-      <Clan v-for="(clan, index) in API_DATA().DATA!.clan_wars"
-            :i="index"
-            :data="clan"
-      />
-    </div>
-  </div>
-
   <Members v-if="page === 'members'" :toggle="toggle"/>
   <Tools v-if="page === 'tools'" :toggle="toggle"/>
+  <PopularShips v-if="page === 'popular_ships'" :toggle="toggle"/>
 </template>
 
 <style scoped>
@@ -204,7 +198,7 @@ button {
   width: 100%;
   background-color: rgba(0, 0, 0, 0.2);
 
-  .members, .about, .tools {
+  button:not(.discord) {
     height: 60px;
     border-radius: 0;
     background: transparent;
@@ -242,21 +236,28 @@ button {
     font-weight: 600;
   }
 
-  .members { left: 30px; }
-  .about { left: 150px; }
-  .tools { left: 250px; }
-  .discord { right: 30px; }
-  .members, .discord, .about, .tools {
+  #navbar-buttons-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
     position: absolute;
     top: 15px;
-    height: 40px;
-    background: transparent;
-    border: none;
-    transition: background-color 0.25s;
-  }
+    left: 15px; right: 15px;
 
-  .members:hover, .discord:hover, .about:hover, .tools:hover {
-    background-color: rgba(255, 255, 255, 0.08);
+    button {
+      background: transparent;
+      border: none;
+      transition: background-color 0.25s;
+      margin: 0 5px 0 5px;
+    }
+
+    .discord {
+      margin-left: auto;
+    }
+
+    button:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
   }
 }
 
@@ -300,19 +301,6 @@ button {
 #why_join_us {
   margin-top: 100px;
   height: 600px;
-}
-
-#clan-war-ratings {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  .clans {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
 }
 
 @media screen and (max-width: 500px) {
@@ -403,8 +391,6 @@ button {
   }
 
   #why_join_us { height: 100%; }
-
-  #clan-war-ratings { padding-top: 100px; }
 }
 
 a {

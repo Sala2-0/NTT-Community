@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import PrCalculator from "./tools/PrCalculator.vue";
+import PrCalculator from "../tools/PrCalculator.vue";
 
 defineProps<{
   toggle: (e: MouseEvent) => void,
@@ -24,7 +24,7 @@ const SWITCH = (event: MouseEvent) => {
 
 <template>
   <div id="tools">
-    <div class="content">
+    <div id="content">
       <div id="sidebar">
         <button id="return" @click="toggle">Return</button>
         <button tool="pr_calculator" @click="SWITCH">PR Calculator</button>
@@ -32,7 +32,7 @@ const SWITCH = (event: MouseEvent) => {
 
       <div id="intro" v-if="tool === null">
         <h2>Welcome to Tools section</h2>
-        <p>Here, you will find various tools focused towards WoWs that I have created</p>
+        <p>Here, you will find various tools and games oriented towards WoWs that I have created</p>
       </div>
 
       <div id="pages" v-show="showPage">
@@ -54,7 +54,7 @@ const SWITCH = (event: MouseEvent) => {
   background-color: #323232;
   z-index: 1000;
 
-  .content {
+  #content {
     opacity: 0;
     animation: fadeContents 0.1s ease-in forwards;
     animation-delay: 0.2s;
@@ -81,10 +81,8 @@ const SWITCH = (event: MouseEvent) => {
 
   #pages, #intro {
     position: absolute;
-    top: 0;
-    left: 250px;
-    width: calc(100% - 250px);
-    height: 100%;
+    top: 0; bottom: 0;
+    left: 250px; right: 0;
     padding: 2rem;
     overflow-y: auto;
 

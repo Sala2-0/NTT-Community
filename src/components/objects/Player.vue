@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import "../Members.css"
+import "../../Members.css"
 
 type PlayerData = {
   role: string;
-  username: string;
+  name: string;
   battles?: number;
   winrate?: number;
   xp_per_battle?: number;
@@ -29,12 +29,12 @@ const roles: any = {
 }
 
 const icons: any = {
-  commander: new URL("../assets/Commander.png", import.meta.url).href,
-  executive_officer: new URL("../assets/Executive_Officer.png", import.meta.url).href,
-  recruitment_officer: new URL("../assets/Recruiter.png", import.meta.url).href,
-  commissioned_officer: new URL("../assets/Commissioned_Officer.png", import.meta.url).href,
-  officer: new URL("../assets/Line_Officer.png", import.meta.url).href,
-  private: new URL("../assets/Midshipman.png", import.meta.url).href
+  commander: new URL("../../assets/Commander.png", import.meta.url).href,
+  executive_officer: new URL("../../assets/Executive_Officer.png", import.meta.url).href,
+  recruitment_officer: new URL("../../assets/Recruiter.png", import.meta.url).href,
+  commissioned_officer: new URL("../../assets/Commissioned_Officer.png", import.meta.url).href,
+  officer: new URL("../../assets/Line_Officer.png", import.meta.url).href,
+  private: new URL("../../assets/Midshipman.png", import.meta.url).href
 }
 </script>
 
@@ -42,7 +42,7 @@ const icons: any = {
   <li class="player">
     <img :src="icons[playerData.role]" alt="RANK">
     <div id="name_rank">
-      <p player="username">{{ playerData.username }}</p>
+      <p player="name">{{ playerData.name }}</p>
       <p player="rank">{{ roles[playerData.role] }}</p>
     </div>
     <div class="end-wrapper">
@@ -83,7 +83,7 @@ const icons: any = {
       text-align: left;
       width: 30%;
 
-      [player="username"] {
+      [player="name"] {
         font-size: 16px;
         margin: 0;
       }

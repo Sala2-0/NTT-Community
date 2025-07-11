@@ -1,18 +1,9 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
-import {API_DATA} from "../../data.ts";
+import {ApiData} from "../../data.ts";
+import type { Ship } from "../../types/ships.ts";
 
-const data = API_DATA();
-
-type Ship = {
-  id: string,
-  name: string,
-  stats: {
-    average_damage_dealt: number,
-    average_kills: number,
-    win_rate: number
-  }
-};
+const data = ApiData();
 
 const battlePerformance = ref({
   damage: 0,
@@ -23,14 +14,12 @@ const battlePerformance = ref({
 const search = ref("");
 const searchList = ref<Ship[]>([]);
 const list = ref<{
-  id: string,
+  id: number,
   name: string,
   PR: number,
-  stats: {
-    average_damage_dealt: number,
-    average_kills: number,
-    win_rate: number
-  }
+  average_damage_dealt: number,
+  average_kills: number,
+  win_rate: number
 }[]>([]);
 
 // Value refers to PR value
@@ -49,16 +38,23 @@ const add = (ship: Ship) => {
   const win = battlePerformance.value.win === "true";
 
   const normalization = {
-    damage: Math.max(0, (battlePerformance.value.damage / ship.stats.average_damage_dealt) - 0.4) / (1 - 0.4),
-    kills: Math.max(0, (battlePerformance.value.kills / ship.stats.average_kills) - 0.1) / (1 - 0.1),
-    win: Math.max(0, ((win ? 1 : 0) / (ship.stats.win_rate / 100)) - 0.7) / (1 - 0.7),
+    damage: Math.max(0, (battlePerformance.value.damage / ship.average_damage) - 0.4) / (1 - 0.4),
+    kills: Math.max(0, (battlePerformance.value.kills / ship.average_kills) - 0.1) / (1 - 0.1),
+    win: Math.max(0, ((win ? 1 : 0) / (ship.win_rate / 100)) - 0.7) / (1 - 0.7),
   }
 
   const personalRating = Math.round((700 * normalization.damage) + (300 * normalization.kills) + (150 * normalization.win));
 
-  list.value.push({id: ship.id, name: ship.name, PR: personalRating, stats: ship.stats});
+  list.value.push({
+    id: ship._id,
+    name: ship.name,
+    PR: personalRating,
+    average_damage_dealt: ship.average_damage,
+    average_kills: ship.average_kills,
+    win_rate: ship.win_rate
+  });
 
-  searchList.value = searchList.value.filter(s => s.id !== ship.id);
+  searchList.value = searchList.value.filter(s => s._id !== ship._id);
 };
 
 watch(search, () => {
@@ -67,15 +63,10 @@ watch(search, () => {
 
   const lowercased = search.value.toLowerCase();
 
-  for (const id in data.SHIPS) {
-    if (data.SHIPS[id].stats === undefined) continue;
-    if (list.value.find(ship => ship.id === id)) continue;
+  for (const ship of data.ships) {
+    if (list.value.find(s => s.id === ship._id)) continue;
 
-    if (data.SHIPS[id].name.toLowerCase().startsWith(lowercased)) searchList.value.push({
-      id,
-      name: data.SHIPS[id].name,
-      stats: data.SHIPS[id].stats,
-    });
+    if (ship.name.toLowerCase().includes(lowercased)) searchList.value.push(ship);
   }
 });
 
@@ -84,9 +75,9 @@ watch(battlePerformance.value, () => {
 
   for (const ship of list.value) {
     const normalization = {
-      damage: Math.max(0, (battlePerformance.value.damage / ship.stats.average_damage_dealt) - 0.4) / (1 - 0.4),
-      kills: Math.max(0, (battlePerformance.value.kills / ship.stats.average_kills) - 0.1) / (1 - 0.1),
-      win: Math.max(0, ((win ? 1 : 0) / (ship.stats.win_rate / 100)) - 0.7) / (1 - 0.7),
+      damage: Math.max(0, (battlePerformance.value.damage / ship.average_damage_dealt) - 0.4) / (1 - 0.4),
+      kills: Math.max(0, (battlePerformance.value.kills / ship.average_kills) - 0.1) / (1 - 0.1),
+      win: Math.max(0, ((win ? 1 : 0) / (ship.win_rate / 100)) - 0.7) / (1 - 0.7),
     }
 
     ship.PR = Math.round((700 * normalization.damage) + (300 * normalization.kills) + (150 * normalization.win));
@@ -139,14 +130,14 @@ watch(battlePerformance.value, () => {
       <input id="search" type="text" placeholder="Ship" autocomplete="off" v-model="search">
 
       <div id="result_box">
-        <button class="ship" v-for="ship in searchList" :key="ship.id" @click="add(ship)">{{ ship.name }}</button>
+        <button class="ship" v-for="ship in searchList" :key="ship._id" @click="add(ship)">{{ ship.name }}</button>
       </div>
     </div>
 
     <div id="list">
-<!--      <div id="topbar">-->
-<!--        <button>test</button>-->
-<!--      </div>-->
+      <!--      <div id="topbar">-->
+      <!--        <button>test</button>-->
+      <!--      </div>-->
       <div class="ship" v-for="ship in list" :key="ship.id">
         <p class="ship-name">{{ ship.name }}</p>
         <p class="personal-rating" :style="{ 'color': getColor(ship.PR) }">{{ ship.PR }}</p>
@@ -171,7 +162,7 @@ p { font-size: 1.1em; font-weight: 500; margin: 0 }
 }
 
 #version {
-  right: 80px;
+  right: 10px;
   top: 10px;
   font-size: 1em;
 }
@@ -211,7 +202,7 @@ p { font-size: 1.1em; font-weight: 500; margin: 0 }
   margin-top: 5rem;
   justify-content: center;
   background-color: transparent;
-  height: 500px;
+  height: 400px;
 
   #search {
     padding: 0.5rem;
@@ -240,7 +231,7 @@ p { font-size: 1.1em; font-weight: 500; margin: 0 }
   top: 70px;
   left: 400px;
   bottom: 100px;
-  right: 100px;
+  right: 50px;
   overflow-y: auto;
   overflow-x: auto;
   background-color: #3b3b3b;

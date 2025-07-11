@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import {nextTick, onMounted, ref} from "vue";
-import Player from "./Player.vue";
-import "../Members.css"
-import {API_DATA} from "../data.ts";
+import Player from "../objects/Player.vue";
+import "../../Members.css"
+import { ApiData } from "../../data.ts";
 
 defineProps<{
   toggle: (e: MouseEvent) => void,
 }>();
 
-const data = API_DATA();
+const data = ApiData();
 
 const roleOrder: any = {
   commander: 1,
@@ -23,7 +23,7 @@ const containerRef = ref<HTMLElement | null>(null);
 const selected = ref("NTT");
 const selectedOrder = ref("rank");
 const showList = ref(false);
-const targetClan = ref(data.DATA.community_clans![selected.value]); // Rearranged members from each clan depending on selected.value
+const targetClan = ref(data.members[selected.value]); // Rearranged members from each clan depending on selected.value
 
 targetClan.value = targetClan.value.sort((a: any, b: any) => roleOrder[a.role] - roleOrder[b.role]); // Sort for the first time
 
@@ -35,7 +35,7 @@ const selectClan = (event: MouseEvent) => {
   showList.value = false;
 
   selected.value = self.getAttribute("clans") as string;
-  targetClan.value = data.DATA.community_clans![selected.value]; // Change values to members from currently selected clan
+  targetClan.value = data.members[selected.value]; // Change values to members from currently selected clan
 
   // Change default sorting back to rank
   selectedOrder.value = "rank";
@@ -65,7 +65,7 @@ const selectOrder = (event: MouseEvent) => {
       case "rank":
         return roleOrder[a.role] - roleOrder[b.role];
       case "player":
-        return a.username.localeCompare(b.username);
+        return a.name.localeCompare(b.name);
       case "battles_amount":
         return b.battles - a.battles;
       case "winrate":
@@ -94,8 +94,8 @@ onMounted(() => {
 
 <template>
   <div id="members">
-    <div class="content">
-      <h2>Members in the community</h2>
+    <div id="content">
+      <h2 id="title">Members in the community</h2>
 
       <div id="clans">
         <button clans="NTT" :class="{a: selected === 'NTT'}" @click="selectClan">NTT</button>
@@ -141,14 +141,14 @@ onMounted(() => {
         </div>
         <ul class="list">
           <Player
-            v-for="(player, index) in targetClan"
-            :i="index"
-            :playerData="player"
+              v-for="(player, index) in targetClan"
+              :i="index"
+              :playerData="player"
           />
         </ul>
       </div>
 
-      <button id="return" @click="toggle">Back</button>
+      <button id="return" @click="toggle">< Back</button>
     </div>
   </div>
 </template>
@@ -166,11 +166,13 @@ onMounted(() => {
   z-index: 1000;
 
   /* Fade in main content first */
-
-  .content {
+  #content {
     opacity: 0;
     animation: fadeContents 0.1s ease-in forwards;
     animation-delay: 0.5s;
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
   }
 
   #return:hover {
@@ -179,16 +181,30 @@ onMounted(() => {
 
   #return {
     position: absolute;
-    top: 0;
+    top: 10px;
     left: 10px;
     background-color: transparent;
     border: none;
     transition: background-color 0.25s;
   }
 
-  #clans button {
-    border-radius: 0;
-    background: rgba(0, 0, 0, 0.24);
+  #title {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  #clans {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    button {
+      border-radius: 0;
+      background: rgba(0, 0, 0, 0.24);
+    }
   }
 
   .a {
@@ -203,9 +219,12 @@ onMounted(() => {
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
-    height: 600px;
     overflow-y: auto;
     scroll-behavior: smooth;
+
+    position: absolute;
+    top: 120px; bottom: 20px;
+    left: 5px; right: 5px;
 
     /* When main content finishes loading, fade in the members list */
     animation: fadeContents 0.1s ease-in forwards;
@@ -261,43 +280,6 @@ onMounted(() => {
       width: 95%;
       padding: 0;
       margin: 0;
-
-      .player {
-        height: 60px;
-        background-color: #222222;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: left;
-
-        img {
-          height: 40px;
-          padding: 0 15px
-        }
-
-        #name_rank {
-          flex-direction: column;
-          text-align: left;
-          width: 30%;
-
-          [player="username"] {
-            font-size: 16px;
-            margin: 0;
-          }
-
-          [player="rank"] {
-            margin: 0;
-            font-size: 14px;
-          }
-        }
-
-        .end-wrapper p {
-          margin: 0;
-          width: 100%;
-          padding: 0 20px;
-          text-align: center;
-        }
-      }
     }
 
     .end-wrapper {
@@ -323,7 +305,7 @@ onMounted(() => {
   from {
     opacity: 0;
     clip-path: inset(0 0 100% 0);
-    transform: translateY(5%);
+    transform: translateY(2.5%);
   }
   to {
     opacity: 1;
