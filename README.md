@@ -3,4 +3,4 @@ A web application for World of Warships clan group `NTT Community` based in Euro
 ## Features
 - Members section similar to official WG site
 - Tools section featuring some tools oriented torwards World of Warships
-- Live Clan Battle ratings for each community clan
+- Leaderboard showing ships played most in the community
