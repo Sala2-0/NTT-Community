@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import {nextTick, onMounted, ref} from "vue";
 import Player from "../objects/Player.vue";
-import "../../Members.css"
 import { ApiData } from "../../data.ts";
-
-defineProps<{
-  toggle: (e: MouseEvent) => void,
-}>();
 
 const data = ApiData();
 
@@ -148,7 +143,9 @@ onMounted(() => {
         </ul>
       </div>
 
-      <button id="return" @click="toggle">< Back</button>
+      <router-link to="/">
+        <button id="return">< Back</button>
+      </router-link>
     </div>
   </div>
 </template>

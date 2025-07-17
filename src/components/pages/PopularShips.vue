@@ -2,10 +2,6 @@
 import {ref, onMounted, nextTick} from 'vue'
 import { ApiData } from "../../data.ts";
 
-defineProps<{
-  toggle: (e: MouseEvent) => void,
-}>();
-
 const data = ApiData();
 const timer = ref<number | null>(parseInt((data.nextUpdate - (new Date().getTime() / 1000)).toString()));
 
@@ -63,7 +59,9 @@ onMounted(() => {
         </div>
       </div>
 
-      <button id="return" @click="toggle">< Back</button>
+      <router-link to="/">
+        <button id="return">< Back</button>
+      </router-link>
     </div>
   </div>
 </template>

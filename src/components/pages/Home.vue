@@ -1,16 +1,8 @@
 <script setup lang="ts">
 import {ref, onMounted, onUnmounted, watch} from 'vue';
-import Members from "./Members.vue";
-import Tools from "./Tools.vue";
-import PopularShips from "./PopularShips.vue";
 
 const page = ref<string | null>(null);
 const about = ref(false);
-
-const toggle = (e: MouseEvent) => {
-  const self = e.target as HTMLButtonElement;
-  page.value = self.getAttribute("page") as string;
-};
 
 const windowWidth = ref(window.innerWidth);
 const mobileSidebar = ref(false);
@@ -33,8 +25,8 @@ const scroll = async () => {
 };
 
 watch(page, () => {
-  if (page.value) document.body.classList.add('no-scroll');
-  else document.body.classList.remove('no-scroll');
+  // if (page.value) document.body.classList.add('no-scroll');
+  // else document.body.classList.remove('no-scroll');
 });
 
 onMounted(() => {
@@ -52,8 +44,8 @@ function discord() {
 
 function toggleMobileSidebar() {
   mobileSidebar.value = !mobileSidebar.value;
-  // if (mobileSidebar.value) document.body.classList.add('no-scroll');
-  // else document.body.classList.remove('no-scroll');
+  if (mobileSidebar.value) document.body.classList.add('no-scroll');
+  else document.body.classList.remove('no-scroll');
 }
 
 function $() {
@@ -65,9 +57,15 @@ function $() {
   <transition name="fade">
     <div v-show="hide" id="navbar">
       <button @click="about = !about" v-if="windowWidth > 500">About</button>
-      <button page="members" @click="toggle" v-if="windowWidth > 500">Members</button>
-      <button page="popular_ships" @click="toggle" v-if="windowWidth > 500">Popular Ships</button>
-      <button page="tools" @click="toggle" v-if="windowWidth > 500">Tools</button>
+      <router-link to="/members">
+        <button v-if="windowWidth > 500">Members</button>
+      </router-link>
+      <router-link to="/popular_ships">
+        <button v-if="windowWidth > 500">Popular Ships</button>
+      </router-link>
+      <router-link to="/tools">
+        <button v-if="windowWidth > 500">Tools</button>
+      </router-link>
       <button class="discord" @click="discord" v-if="windowWidth > 500">Join our Discord!</button>
 
       <button class="mobile-menu" v-if="windowWidth <= 500" @click="toggleMobileSidebar">
@@ -81,9 +79,15 @@ function $() {
       <p>NTT Community</p>
       <div id="navbar-buttons-top">
         <button @click="about = !about" v-if="windowWidth > 500">About</button>
-        <button page="members" @click="toggle" v-if="windowWidth > 500">Members</button>
-        <button page="popular_ships" @click="toggle" v-if="windowWidth > 500">Popular Ships</button>
-        <button page="tools" @click="toggle" v-if="windowWidth > 500">Tools</button>
+        <router-link to="/members">
+          <button v-if="windowWidth > 500">Members</button>
+        </router-link>
+        <router-link to="/popular_ships">
+          <button v-if="windowWidth > 500">Popular Ships</button>
+        </router-link>
+        <router-link to="/tools">
+          <button v-if="windowWidth > 500">Tools</button>
+        </router-link>
         <button class="discord" @click="discord" v-if="windowWidth > 500">Join our Discord!</button>
       </div>
 
@@ -100,14 +104,14 @@ function $() {
       <p>Site is managed by <a href="https://profile.worldofwarships.eu/statistics/557422466" target="_blank">Yurizono_Seia_</a></p>
       <p>Built with Vue.js</p>
     </div>
-    <p class="version">Site version 2.3</p>
+    <p class="version">Site version 2.4</p>
   </div>
 
   <div id="about-dropdown" v-show="about" v-if="windowWidth > 500">
     <p>Site is managed by <a href="https://profile.worldofwarships.eu/statistics/557422466" target="_blank">Yurizono_Seia_</a></p>
     <p>Built with Vue.js</p>
     <button class="donation" @click="$">OPTIONAL</button>
-    <p class="version">Site version 2.3</p>
+    <p class="version">Site version 2.4</p>
   </div>
 
   <div id="intro">
@@ -142,10 +146,6 @@ function $() {
       </div>
     </div>
   </div>
-
-  <Members v-if="page === 'members'" :toggle="toggle"/>
-  <Tools v-if="page === 'tools'" :toggle="toggle"/>
-  <PopularShips v-if="page === 'popular_ships'" :toggle="toggle"/>
 </template>
 
 <style scoped>

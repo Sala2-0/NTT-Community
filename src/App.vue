@@ -3,7 +3,6 @@ import axios from 'axios'
 import {onMounted, ref} from "vue";
 import Loading from "./components/Loading.vue";
 import Loaded from "./components/Loaded.vue";
-import Home from "./components/pages/Home.vue";
 import {ApiData} from "./data";
 import type {Member} from "./types/member.ts";
 import type {Ship} from "./types/ships.ts";
@@ -77,7 +76,7 @@ function delay(time: number) {
 <template>
   <Loading v-if="loading === true"/>
   <Loaded v-else-if="loading === false"/>
-  <Home v-else/>
+  <router-view v-else/>
 </template>
 
 <style scoped>

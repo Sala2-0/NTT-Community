@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import PrCalculator from "../tools/PrCalculator.vue";
-
-defineProps<{
-  toggle: (e: MouseEvent) => void,
-}>();
+import Arona from "../tools/Arona.vue";
 
 const tool = ref<string | null>(null);
 const showPage = ref(false);
@@ -13,6 +10,10 @@ const SWITCH = (event: MouseEvent) => {
   const self = event.target as HTMLButtonElement;
 
   if (self.classList.contains("selected")) return;
+
+  for (const el of document.getElementsByClassName("selected"))
+    el.classList.remove("selected");
+
   self.classList.add("selected");
 
   showPage.value = false;
@@ -26,8 +27,9 @@ const SWITCH = (event: MouseEvent) => {
   <div id="tools">
     <div id="content">
       <div id="sidebar">
-        <button id="return" @click="toggle">Return</button>
+        <router-link to="/"><button id="return">Return</button></router-link>
         <button tool="pr_calculator" @click="SWITCH">PR Calculator</button>
+        <button tool="arona" @click="SWITCH">Arona</button>
       </div>
 
       <div id="intro" v-if="tool === null">
@@ -37,6 +39,7 @@ const SWITCH = (event: MouseEvent) => {
 
       <div id="pages" v-show="showPage">
         <PrCalculator v-show="tool === 'pr_calculator'"/>
+        <Arona v-show="tool === 'arona'"/>
       </div>
     </div>
   </div>
