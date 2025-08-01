@@ -7,7 +7,7 @@ import PopularShips from "../components/pages/PopularShips.vue";
 const routes = [
     { path: '/', component: Home },
     { path: '/members', name: "Members", component: Members },
-    { path: '/popular_ships', name: "Popular Ships", component: PopularShips },
+    { path: '/popular-ships', name: "Popular Ships", component: PopularShips },
     { path: "/tools", name: "Tools", component: Tools },
 ];
 

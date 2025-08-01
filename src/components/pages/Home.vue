@@ -82,7 +82,7 @@ function $() {
         <router-link to="/members">
           <button v-if="windowWidth > 500">Members</button>
         </router-link>
-        <router-link to="/popular_ships">
+        <router-link to="/popular-ships">
           <button v-if="windowWidth > 500">Popular Ships</button>
         </router-link>
         <router-link to="/tools">
