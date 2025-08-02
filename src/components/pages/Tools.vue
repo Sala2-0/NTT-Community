@@ -2,6 +2,7 @@
 import {ref} from "vue";
 import PrCalculator from "../tools/PrCalculator.vue";
 import Arona from "../tools/Arona.vue";
+import Cardzzz from "../tools/Cardzzz.vue";
 
 const tool = ref<string | null>(null);
 const showPage = ref(false);
@@ -30,6 +31,7 @@ const SWITCH = (event: MouseEvent) => {
         <router-link to="/"><button id="return">Return</button></router-link>
         <button tool="pr_calculator" @click="SWITCH">PR Calculator</button>
         <button tool="arona" @click="SWITCH">Arona</button>
+        <button tool="cardzzz" @click="SWITCH">Cardzzz</button>
       </div>
 
       <div id="intro" v-if="tool === null">
@@ -40,6 +42,7 @@ const SWITCH = (event: MouseEvent) => {
       <div id="pages" v-show="showPage">
         <PrCalculator v-show="tool === 'pr_calculator'"/>
         <Arona v-show="tool === 'arona'"/>
+        <Cardzzz v-show="tool === 'cardzzz'"/>
       </div>
     </div>
   </div>
