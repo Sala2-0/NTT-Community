@@ -3,13 +3,13 @@ import {ref, onMounted, nextTick} from 'vue'
 import { ApiData } from "../../data.ts";
 
 const data = ApiData();
-const timer = ref<number | null>(parseInt((data.nextUpdate - (new Date().getTime() / 1000)).toString()));
+const timer = ref<number>(60);
 
 const refListBox = ref<HTMLElement | null>(null);
 const showList = ref(false);
 const updating = ref(false);
 
-const update = () => {
+const update = async () => {
   showList.value = false;
   updating.value = true;
 
@@ -18,17 +18,27 @@ const update = () => {
     nextTick(() => refListBox.value?.scrollTo({top: 0, behavior: "instant"}));
 
     updating.value = false;
+    timer.value = 60;
   }, 2000);
+
+  await data.getPopularShipsData(false);
 };
 
-onMounted(() => {
-  setInterval(() => {
-    timer.value = parseInt((data.nextUpdate - (new Date().getTime() / 1000)).toString());
+onMounted(async () => {
+  await data.getPopularShipsData();
 
+  setInterval(async () => {
     if (updating.value) return;
 
-    if (timer.value === 0) update();
+    if (timer.value === 0) await update();
   }, 100);
+
+  setInterval(() => {
+    if (updating.value) return;
+
+    timer.value! -= 1;
+  }, 1000);
+
   setTimeout(() => showList.value = true, 300);
 });
 </script>
