@@ -104,14 +104,14 @@ function $() {
       <p>Site is managed by <a href="https://profile.worldofwarships.eu/statistics/557422466" target="_blank">Yurizono_Seia_</a></p>
       <p>Built with Vue.js</p>
     </div>
-    <p class="version">Site version 2.4</p>
+    <p class="version">Site version 2.5</p>
   </div>
 
   <div id="about-dropdown" v-show="about" v-if="windowWidth > 500">
     <p>Site is managed by <a href="https://profile.worldofwarships.eu/statistics/557422466" target="_blank">Yurizono_Seia_</a></p>
     <p>Built with Vue.js</p>
     <button class="donation" @click="$">OPTIONAL</button>
-    <p class="version">Site version 2.4</p>
+    <p class="version">Site version 2.5</p>
   </div>
 
   <div id="intro">
